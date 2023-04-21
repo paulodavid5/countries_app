@@ -2,7 +2,10 @@ import React from "react";
 
 function Country(props) {
   return (
-    <div className={`country_card ${props.class}`}>
+    <div
+      className={`country_card ${props.class}`}
+      onClick={() => props.onSelectCountry(props.country)}
+    >
       <div className="country_card_img">
         <img src={props.img} alt={props.name} />
       </div>

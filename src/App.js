@@ -6,6 +6,7 @@ import { Nav } from "./components/Nav";
 import Select from "./components/Select";
 import "bootstrap/dist/css/bootstrap.min.css";
 import dataApi from "./data.json";
+import CountryDetails from "./components/CountryDetails";
 
 function App() {
   const [data, setData] = useState([]);
@@ -13,14 +14,8 @@ function App() {
   const [regionC, setRegionC] = useState([]);
   const [searchCountry, setSearchCountry] = useState("");
   const [countriesByRegion, setCountriesByRegion] = useState([]);
-
-  // const [dataCountry, setDataCountry] = useState({
-  //   name: "",
-  //   population: 0,
-  //   region: "",
-  //   capital: "",
-  //   flag: "",
-  // });
+  const [selectedCountry, setSelectedCountry] = useState(false);
+  const [clickedCountry, setClickedCountry] = useState(null);
 
   function handleNavButton(darkButton) {
     setMode(darkButton);
@@ -46,6 +41,12 @@ function App() {
     setData([]);
   };
 
+  const handleSelectCountry = (country) => {
+    setClickedCountry(country);
+    setSelectedCountry(!selectedCountry);
+    setCountriesByRegion([]);
+  };
+
   useEffect(() => {
     handleCountry();
     setSearchCountry(searchCountry);
@@ -62,23 +63,6 @@ function App() {
     handleNavButton();
     setMode(mode);
   }, [mode]);
-
-  // useEffect(() => {
-  //   if (data?.name) {
-  //     setDataCountry({
-  //       name: data.name,
-  //       population: data.population,
-  //       region: data.region,
-  //       capital: data.capital,
-  //       flag: data.flag,
-  //     });
-  //   }
-  // }, [data]);
-  // const formatNumberPopulation = (data) => {
-  //   const number = data.population;
-  //   const formattedPopulation = number.toLocaleString("pt-pt");
-  //   return formattedPopulation;
-  // };
 
   return (
     <div className={`App ${mode === true ? "dark_App" : "light_App"}`}>
@@ -99,6 +83,8 @@ function App() {
               population={country.population}
               region={country.region}
               capital={country.capital}
+              onSelectCountry={handleSelectCountry}
+              country={country}
             />
           ))}
         {data?.name && (
@@ -109,6 +95,29 @@ function App() {
             population={data.population}
             region={data.region}
             capital={data.capital}
+          />
+        )}
+        {clickedCountry && (
+          <CountryDetails
+            country={clickedCountry}
+            key={clickedCountry.name}
+            name={clickedCountry.name}
+            image={clickedCountry.flag}
+            population={clickedCountry.population}
+            region={clickedCountry.region}
+            subRegion={clickedCountry.subregion}
+            capital={clickedCountry.capital}
+            native={clickedCountry.nativeName}
+            domain={clickedCountry.topLevelDomain}
+            language={clickedCountry.languages.map((language) => language.name)}
+            currencies={clickedCountry.currencies.map(
+              (currency) => currency.name
+            )}
+            border={clickedCountry.borders.map((border, key) => (
+              <div className="border_country" key={key}>
+                {border}
+              </div>
+            ))}
           />
         )}
       </div>
